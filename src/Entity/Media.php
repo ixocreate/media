@@ -99,7 +99,7 @@ final class Media implements EntityInterface, DatabaseEntityInterface, MediaInte
         return $this->createdAt;
     }
 
-    public function updatedAt(): DateTimeType
+    public function updatedAt(): ?DateTimeType
     {
         return $this->updatedAt;
     }
@@ -122,7 +122,7 @@ final class Media implements EntityInterface, DatabaseEntityInterface, MediaInte
             new Definition('metaData', TypeInterface::TYPE_ARRAY, true, true),
             new Definition('createdBy', UuidType::class, true, true),
             new Definition('createdAt', DateTimeType::class, false, true),
-            new Definition('updatedAt', DateTimeType::class, false, true),
+            new Definition('updatedAt', DateTimeType::class, true, true),
             new Definition('deletedAt', DateTimeType::class, true, true),
         ]);
     }

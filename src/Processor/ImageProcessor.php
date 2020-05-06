@@ -17,6 +17,7 @@ use Ixocreate\Media\Config\MediaConfig;
 use Ixocreate\Media\Config\MediaPaths;
 use Ixocreate\Media\ImageDefinition\ImageDefinitionInterface;
 use Ixocreate\Media\MediaInterface;
+use League\Flysystem\FileNotFoundException;
 
 final class ImageProcessor
 {
@@ -103,8 +104,12 @@ final class ImageProcessor
 
         $mediaPath = $this->media->publicStatus() ? MediaPaths::PUBLIC_PATH : MediaPaths::PRIVATE_PATH;
 
-        /** @var Image $image */
-        $image = ($this->image !== null) ? $this->image : $imageManager->make($this->filesystem->read($mediaPath . $this->media->basePath() . $this->media->filename()));
+        try {
+            /** @var Image $image */
+            $image = ($this->image !== null) ? $this->image : $imageManager->make($this->filesystem->read($mediaPath . $this->media->basePath() . $this->media->filename()));
+        } catch (FileNotFoundException $exception) {
+            return false;
+        }
 
         $this->imageParameters['imageWidth'] = $image->width();
         $this->imageParameters['imageHeight'] = $image->height();

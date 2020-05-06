@@ -20,6 +20,7 @@ use Ixocreate\Media\MediaInterface;
 use Ixocreate\Media\Processor\ImageProcessor;
 use Ixocreate\Media\Repository\MediaDefinitionInfoRepository;
 use Ixocreate\Media\Repository\MediaRepository;
+use League\Flysystem\FileNotFoundException;
 
 final class ImageHandler implements MediaHandlerInterface
 {
@@ -258,7 +259,11 @@ final class ImageHandler implements MediaHandlerInterface
     {
         $file = $this->mediaPath . $this->media->basePath() . $this->media->filename();
 
-        $imageData = \getimagesizefromstring($filesystem->read($file));
+        try {
+            $imageData = \getimagesizefromstring($filesystem->read($file));
+        } catch (FileNotFoundException $exception) {
+            return;
+        }
 
         $metaData = [
             'width' => $imageData[0],
